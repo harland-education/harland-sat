@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harland Education — SAT Practice Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== BRAND TOKENS ===== */
+    :root {
+      --navy:       #1B2A4A;
+      --navy-deep:  #131F38;
+      --navy-mid:   #243660;
+      --gold:       #C9A84C;
+      --gold-light: #EDD98A;
+      --gold-pale:  #FAF5E8;
+      --cream:      #F7F5F0;
+      --white:      #FFFFFF;
+      --grey:       #6B7280;
+      --light-grey: #E5E3DF;
+      --mid-grey:   #D1CEC9;
+      --error:      #C0392B;
+      --success:    #27AE60;
+      --success-bg: #ECFDF5;
+      --warning:    #D97706;
+      --font-serif: 'Libre Baskerville', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--cream);
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      background: var(--navy);
+      padding: 0 40px;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      min-height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-weight: 700; font-size: 17px;
+      color: var(--navy); flex-shrink: 0;
+    }
+    .brand-name { font-family: var(--font-serif); font-size: 17px; color: var(--white); }
+    .brand-sub  { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .header-student {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+    }
+    .student-avatar {
+      width: 34px; height: 34px;
+      background: rgba(201,168,76,0.15);
+      border: 1.5px solid rgba(201,168,76,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      color: var(--gold);
+    }
+    .student-name-label { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .student-change {
+      font-size: 11px; color: rgba(255,255,255,0.35);
+      background: none; border: none; cursor: pointer;
+      text-decoration: underline; padding: 0;
+      font-family: var(--font-sans);
+      transition: color 0.2s;
+    }
+    .student-change:hover { color: var(--gold); }
+
+    /* ===== SCREENS ===== */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    .login-card {
+      background: var(--white);
+      border: 1px solid var(--light-grey);
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(27,42,74,0.08);
+    }
+    .login-eyebrow {
+      font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+      font-weight: 600; margin-bottom: 14px;
+    }
+    .login-title {
+      font-family: var(--font-serif);
+      font-size: 26px; line-height: 1.3;
+      color: var(--navy); margin-bottom: 10px;
+    }
+    .login-desc {
+      font-size: 14px; color: var(--grey);
+      line-height: 1.65; margin-bottom: 32px;
+    }
+    .field-label {
+      display: block; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--navy); margin-bottom: 8px;
+    }
+    .field-input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid var(--light-grey);
+      border-radius: 8px;
+      font-family: var(--font-sans); font-size: 16px;
+      color: var(--navy); background: var(--white);
+      outline: none; transition: border-color 0.2s;
+    }
+    .field-input:focus { border-color: var(--gold); }
+    .field-error { font-size: 13px; color: var(--error); margin-top: 6px; display: none; }
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--navy); color: var(--white);
+      font-family: var(--font-sans); font-size: 15px; font-weight: 600;
+      padding: 14px 28px; border: none; border-radius: 8px;
+      cursor: pointer; width: 100%; margin-top: 20px;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--navy-mid); }
+    .btn-primary:active { transform: scale(0.99); }
+
+    /* ===== LIBRARY SCREEN ===== */
+    .library-hero {
+      background: var(--navy);
+      padding: 36px 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .library-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -40px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-greeting {
+      font-size: 12px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold);
+      font-weight: 600; margin-bottom: 8px;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 28px; color: var(--white);
+      line-height: 1.3; margin-bottom: 20px;
+    }
+    /* Summary stats row */
+    .hero-stats {
+      display: flex; gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin: 0 -40px;
+    }
+    .hero-stat {
+      flex: 1; padding: 18px 28px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.2s;
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-val {
+      font-family: var(--font-serif);
+      font-size: 26px; font-weight: 700;
+      color: var(--white); line-height: 1;
+    }
+    .hero-stat-val.gold { color: var(--gold); }
+    .hero-stat-lbl {
+      font-size: 11px; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-top: 5px;
+    }
+
+    /* ===== FILTER TABS ===== */
+    .filter-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--light-grey);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .filter-tab {
+      padding: 14px 20px;
+      font-size: 13px; font-weight: 600;
+      color: var(--grey); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+      background: none; border-top: none; border-left: none; border-right: none;
+      font-family: var(--font-sans);
+    }
+    .filter-tab:hover { color: var(--navy); }
+    .filter-tab.active { color: var(--navy); border-bottom-color: var(--gold); }
+
+    /* ===== PRACTICE GRID ===== */
+    .library-body { padding: 32px 40px 64px; max-width: 1100px; }
+
+    .category-section { margin-bottom: 44px; }
+    .category-heading {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 18px;
+    }
+    .category-heading-line {
+      flex: 1; height: 1px;
+      background: var(--light-grey);
+    }
+    .category-heading-text {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--navy); white-space: nowrap;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    /* ===== PRACTICE CARD ===== */
+    .practice-card {
+      background: var(--white);
+      border: 1.5px solid var(--light-grey);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      text-decoration: none;
+      display: block;
+      position: relative;
+    }
+    .practice-card:hover {
+      border-color: var(--navy);
+      box-shadow: 0 6px 24px rgba(27,42,74,0.1);
+      transform: translateY(-2px);
+    }
+    .practice-card.completed {
+      border-color: rgba(39,174,96,0.3);
+    }
+    .practice-card.completed:hover {
+      border-color: var(--success);
+    }
+
+    /* Status ribbon */
+    .card-ribbon {
+      position: absolute; top: 0; right: 0;
+      padding: 5px 12px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border-radius: 0 12px 0 8px;
+    }
+    .card-ribbon.not-started { background: var(--cream); color: var(--grey); }
+    .card-ribbon.completed   { background: var(--success-bg); color: var(--success); }
+    .card-ribbon.loading     { background: var(--cream); color: var(--mid-grey); }
+
+    .card-body { padding: 22px 20px 18px; }
+
+    /* Category + difficulty badges */
+    .card-badges { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .badge {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 4px;
+    }
+    .badge-rw      { background: #EEF2FF; color: #4338CA; }
+    .badge-math    { background: #FFF7ED; color: #C2410C; }
+    .badge-mixed   { background: var(--gold-pale); color: #92400E; }
+    .badge-foundation { background: #F0FDF4; color: #166534; }
+    .badge-medium     { background: #FFFBEB; color: #92400E; }
+    .badge-hard       { background: #FEF2F2; color: #991B1B; }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 16px; font-weight: 700;
+      line-height: 1.35; color: var(--navy);
+      margin-bottom: 7px;
+    }
+    .card-desc {
+      font-size: 13px; color: var(--grey);
+      line-height: 1.55; margin-bottom: 16px;
+    }
+
+    .card-meta {
+      display: flex; gap: 16px;
+      font-size: 12px; color: var(--grey);
+    }
+    .card-meta-item { display: flex; align-items: center; gap: 5px; }
+    .card-meta-icon { font-size: 13px; }
+
+    /* Score display on completed cards */
+    .card-score-bar {
+      padding: 14px 20px;
+      background: var(--cream);
+      border-top: 1px solid var(--light-grey);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .score-bar-track {
+      flex: 1; height: 5px;
+      background: var(--light-grey);
+      border-radius: 3px; overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%; border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+    .score-bar-fill.high   { background: var(--success); }
+    .score-bar-fill.mid    { background: var(--gold); }
+    .score-bar-fill.low    { background: var(--error); }
+    .score-bar-label {
+      font-size: 12px; font-weight: 700;
+      color: var(--navy); white-space: nowrap; min-width: 36px; text-align: right;
+    }
+    .score-bar-fraction {
+      font-size: 11px; color: var(--grey); white-space: nowrap;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 48px 24px;
+      color: var(--grey); font-size: 15px;
+      display: none;
+    }
+
+    /* Loading skeleton */
+    .skeleton-card {
+      background: var(--white);
+      border: 1.5px solid var(--light-grey);
+      border-radius: 12px; overflow: hidden;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .skeleton-body { padding: 22px 20px 18px; }
+    .skeleton-line {
+      background: var(--light-grey);
+      border-radius: 4px; margin-bottom: 10px;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.55; }
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(27,42,74,0.6);
+      display: none; align-items: center; justify-content: center;
+      z-index: 200;
+    }
+    .loading-overlay.visible { display: flex; }
+    .loading-spinner {
+      width: 48px; height: 48px;
+      border: 3px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Error banner */
+    .error-banner {
+      background: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: 8px; padding: 14px 18px;
+      font-size: 14px; color: var(--error);
+      margin: 24px 40px 0; display: none;
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      margin-top: auto;
+      background: var(--navy);
+      padding: 20px 40px; text-align: center;
+      font-size: 12px; color: rgba(255,255,255,0.28);
+      letter-spacing: 0.04em;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .site-header    { padding: 0 20px; }
+      .library-hero   { padding: 28px 20px 0; }
+      .hero-stats     { margin: 0 -20px; overflow-x: auto; }
+      .hero-stat      { min-width: 120px; padding: 14px 18px; }
+      .filter-strip   { padding: 0 20px; }
+      .library-body   { padding: 24px 20px 48px; }
+      .practice-grid  { grid-template-columns: 1fr; }
+      .hero-title     { font-size: 22px; }
+      .error-banner   { margin: 16px 20px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     CONFIGURATION — EDIT THIS SECTION
+     ============================================================ -->
+<script>
+
+  /* ----------------------------------------------------------
+     1. SUPABASE CREDENTIALS
+     ---------------------------------------------------------- */
+  var SB_URL = 'https://takuuqvpyqvomcfmcjoz.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRha3V1cXZweXF2b21jZm1jam96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODM2MDYsImV4cCI6MjA5MDI1OTYwNn0.X_9VXsZBO5pKlNtvP5-AL6d5LlSfjNxDSb8NZB9vO7M';
+  /*
+     CONFIGURE: Paste your full eyJhbG... anon key.
+  */
+
+  /* ----------------------------------------------------------
+     2. DISPLAY CONFIG
+     ---------------------------------------------------------- */
+  var CONFIG = {
+    pageTitle:       'SAT Practice Library',
+    heroTitle:       'Your Practice Library',
+    loginTitle:      'Welcome Back',
+    loginDesc:       'Enter your name to load your practice history and pick up where you left off.',
+    loginEyebrow:    'SAT Preparation'
+  };
+
+  /* ----------------------------------------------------------
+     3. PRACTICE CATALOG
+     This is the master list of all available practice sets.
+     Add a new entry here whenever you deploy a new session file.
+
+     FIELDS:
+       id          {string}  Must match the DIAGNOSTIC_TYPE in the session HTML file
+       title       {string}  Display name shown on the card
+       description {string}  One-sentence description shown on the card
+       category    {string}  'Reading & Writing' | 'Math' | 'Mixed'
+       difficulty  {string}  'Foundation' | 'Medium' | 'Hard'
+       questions   {number}  Number of questions in the set
+       minutes     {number}  Estimated time in minutes
+       file        {string}  Relative path to the session HTML file
+
+     NOTES:
+     - Keep 'file' paths relative to where this selector is hosted.
+     - 'id' must match DIAGNOSTIC_TYPE exactly — this is how results are linked.
+     - The order here determines the display order within each category.
+     ---------------------------------------------------------- */
+    var CATALOG = [
+    {
+      id:          'rw_cid_easy',
+      title:       'Central Ideas & Details — Easy',
+      description: 'Central Ideas & Details practice at accessible difficulty.',
+      category:    'Reading & Writing',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=rw_cid_easy&section=RW&skill=Central%20Ideas%20%26%20Details&difficulty=Easy&label=Central%20Ideas%20%26%20Details%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'rw_cid_med',
+      title:       'Central Ideas & Details — Medium',
+      description: 'Central Ideas & Details at standard SAT difficulty.',
+      category:    'Reading & Writing',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=rw_cid_med&section=RW&skill=Central%20Ideas%20%26%20Details&difficulty=Medium&label=Central%20Ideas%20%26%20Details%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'rw_cid_hard',
+      title:       'Central Ideas & Details — Hard',
+      description: 'Central Ideas & Details at the highest difficulty level.',
+      category:    'Reading & Writing',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=rw_cid_hard&section=RW&skill=Central%20Ideas%20%26%20Details&difficulty=Hard&label=Central%20Ideas%20%26%20Details%20%E2%80%94%20Hard&limit=8'
+    },
+    {
+      id:          'rw_coe_easy',
+      title:       'Command of Evidence — Easy',
+      description: 'Identify quotes that best support a given claim.',
+      category:    'Reading & Writing',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=rw_coe_easy&section=RW&skill=Command%20of%20Evidence%20%E2%80%94%20Textual&difficulty=Easy&label=Command%20of%20Evidence%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'rw_coe_med',
+      title:       'Command of Evidence — Medium',
+      description: 'Command of Evidence at standard SAT difficulty.',
+      category:    'Reading & Writing',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=rw_coe_med&section=RW&skill=Command%20of%20Evidence%20%E2%80%94%20Textual&difficulty=Medium&label=Command%20of%20Evidence%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'rw_coe_hard',
+      title:       'Command of Evidence — Hard',
+      description: 'Command of Evidence at the highest difficulty level.',
+      category:    'Reading & Writing',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=rw_coe_hard&section=RW&skill=Command%20of%20Evidence%20%E2%80%94%20Textual&difficulty=Hard&label=Command%20of%20Evidence%20%E2%80%94%20Hard&limit=8'
+    },
+    {
+      id:          'rw_coq_easy',
+      title:       'Command of Evidence (Quant) — Easy',
+      description: 'Use data from tables and graphs to support claims.',
+      category:    'Reading & Writing',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=rw_coq_easy&section=RW&skill=Command%20of%20Evidence%20%E2%80%94%20Quantitative&difficulty=Easy&label=Command%20of%20Evidence%20%28Quant%29%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'rw_coq_med',
+      title:       'Command of Evidence (Quant) — Med',
+      description: 'Quantitative evidence questions at medium difficulty.',
+      category:    'Reading & Writing',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=rw_coq_med&section=RW&skill=Command%20of%20Evidence%20%E2%80%94%20Quantitative&difficulty=Medium&label=Command%20of%20Evidence%20%28Quant%29%20%E2%80%94%20Med&limit=8'
+    },
+    {
+      id:          'rw_inf_easy',
+      title:       'Inferences — Easy',
+      description: 'Complete passages with the most logical conclusion.',
+      category:    'Reading & Writing',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=rw_inf_easy&section=RW&skill=Inferences&difficulty=Easy&label=Inferences%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'rw_inf_med',
+      title:       'Inferences — Medium',
+      description: 'Inference questions at standard SAT difficulty.',
+      category:    'Reading & Writing',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=rw_inf_med&section=RW&skill=Inferences&difficulty=Medium&label=Inferences%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'rw_inf_hard',
+      title:       'Inferences — Hard',
+      description: 'Inference questions at the highest difficulty level.',
+      category:    'Reading & Writing',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=rw_inf_hard&section=RW&skill=Inferences&difficulty=Hard&label=Inferences%20%E2%80%94%20Hard&limit=8'
+    },
+    {
+      id:          'math_le1_easy',
+      title:       'Linear Equations (1 Var) — Easy',
+      description: 'Solve one-variable linear equations at accessible difficulty.',
+      category:    'Math',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=math_le1_easy&section=MATH&skill=Linear%20Equations%20in%20One%20Variable&difficulty=Easy&label=Linear%20Equations%20%281%20Var%29%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'math_le1_med',
+      title:       'Linear Equations (1 Var) — Medium',
+      description: 'One-variable equations at standard SAT difficulty.',
+      category:    'Math',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=math_le1_med&section=MATH&skill=Linear%20Equations%20in%20One%20Variable&difficulty=Medium&label=Linear%20Equations%20%281%20Var%29%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'math_le1_hard',
+      title:       'Linear Equations (1 Var) — Hard',
+      description: 'One-variable equations at the highest difficulty level.',
+      category:    'Math',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=math_le1_hard&section=MATH&skill=Linear%20Equations%20in%20One%20Variable&difficulty=Hard&label=Linear%20Equations%20%281%20Var%29%20%E2%80%94%20Hard&limit=8'
+    },
+    {
+      id:          'math_le2_easy',
+      title:       'Linear Equations (2 Var) — Easy',
+      description: 'Solve and interpret two-variable linear equations.',
+      category:    'Math',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=math_le2_easy&section=MATH&skill=Linear%20Equations%20in%20Two%20Variables&difficulty=Easy&label=Linear%20Equations%20%282%20Var%29%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'math_le2_med',
+      title:       'Linear Equations (2 Var) — Medium',
+      description: 'Two-variable equations at standard SAT difficulty.',
+      category:    'Math',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=math_le2_med&section=MATH&skill=Linear%20Equations%20in%20Two%20Variables&difficulty=Medium&label=Linear%20Equations%20%282%20Var%29%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'math_lf_easy',
+      title:       'Linear Functions — Easy',
+      description: 'Interpret and build linear function models.',
+      category:    'Math',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=math_lf_easy&section=MATH&skill=Linear%20Functions&difficulty=Easy&label=Linear%20Functions%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'math_lf_med',
+      title:       'Linear Functions — Medium',
+      description: 'Linear functions at standard SAT difficulty.',
+      category:    'Math',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=math_lf_med&section=MATH&skill=Linear%20Functions&difficulty=Medium&label=Linear%20Functions%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'math_lf_hard',
+      title:       'Linear Functions — Hard',
+      description: 'Linear functions at the highest difficulty level.',
+      category:    'Math',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=math_lf_hard&section=MATH&skill=Linear%20Functions&difficulty=Hard&label=Linear%20Functions%20%E2%80%94%20Hard&limit=8'
+    },
+    {
+      id:          'math_li_easy',
+      title:       'Linear Inequalities — Easy',
+      description: 'Solve and interpret linear inequalities.',
+      category:    'Math',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=math_li_easy&section=MATH&skill=Linear%20Inequalities&difficulty=Easy&label=Linear%20Inequalities%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'math_li_med',
+      title:       'Linear Inequalities — Medium',
+      description: 'Linear inequalities at standard SAT difficulty.',
+      category:    'Math',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=math_li_med&section=MATH&skill=Linear%20Inequalities&difficulty=Medium&label=Linear%20Inequalities%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'math_li_hard',
+      title:       'Linear Inequalities — Hard',
+      description: 'Linear inequalities at the highest difficulty level.',
+      category:    'Math',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=math_li_hard&section=MATH&skill=Linear%20Inequalities&difficulty=Hard&label=Linear%20Inequalities%20%E2%80%94%20Hard&limit=8'
+    },
+    {
+      id:          'math_sys_easy',
+      title:       'Systems of Equations — Easy',
+      description: 'Solve systems of linear equations.',
+      category:    'Math',
+      difficulty:  'Foundation',
+      questions:   8,
+      minutes:     10,
+      file:        'harland_sat_session.html?dtype=math_sys_easy&section=MATH&skill=Systems%20of%20Two%20Linear%20Equations&difficulty=Easy&label=Systems%20of%20Equations%20%E2%80%94%20Easy&limit=8'
+    },
+    {
+      id:          'math_sys_med',
+      title:       'Systems of Equations — Medium',
+      description: 'Systems of equations at standard SAT difficulty.',
+      category:    'Math',
+      difficulty:  'Medium',
+      questions:   8,
+      minutes:     12,
+      file:        'harland_sat_session.html?dtype=math_sys_med&section=MATH&skill=Systems%20of%20Two%20Linear%20Equations&difficulty=Medium&label=Systems%20of%20Equations%20%E2%80%94%20Medium&limit=8'
+    },
+    {
+      id:          'math_sys_hard',
+      title:       'Systems of Equations — Hard',
+      description: 'Systems of equations at the highest difficulty level.',
+      category:    'Math',
+      difficulty:  'Hard',
+      questions:   8,
+      minutes:     14,
+      file:        'harland_sat_session.html?dtype=math_sys_hard&section=MATH&skill=Systems%20of%20Two%20Linear%20Equations&difficulty=Hard&label=Systems%20of%20Equations%20%E2%80%94%20Hard&limit=8'
+    }
+  ];
+
+</script>
+<!-- END CONFIGURATION -->
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-brand">
+    <div class="logo-mark">H</div>
+    <div>
+      <div class="brand-name">Harland Education</div>
+      <div class="brand-sub">SAT Preparation</div>
+    </div>
+  </div>
+  <div class="header-student" id="headerStudentEl">
+    <div class="student-avatar" id="studentAvatarEl">?</div>
+    <div>
+      <div class="student-name-label" id="headerStudentName"></div>
+      <button class="student-change" onclick="changeStudent()">Not you?</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== LOADING OVERLAY ===== -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- ===== SCREEN 1: LOGIN ===== -->
+<section class="screen active" id="screenLogin">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-eyebrow" id="loginEyebrowEl"></div>
+      <h1 class="login-title" id="loginTitleEl"></h1>
+      <p class="login-desc" id="loginDescEl"></p>
+      <label class="field-label" for="loginName">Your Full Name</label>
+      <input
+        class="field-input"
+        type="text"
+        id="loginName"
+        autocomplete="name"
+        spellcheck="false"
+        placeholder="Enter your name"
+      >
+      <div class="field-error" id="loginError">Please enter your name to continue.</div>
+      <button class="btn-primary" id="btnLogin">View My Practice Library</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCREEN 2: LIBRARY ===== -->
+<section class="screen" id="screenLibrary">
+
+  <!-- Hero banner -->
+  <div class="library-hero">
+    <div class="hero-greeting" id="heroGreeting">Your Progress</div>
+    <h2 class="hero-title" id="heroTitle"></h2>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val gold" id="statCompleted">—</div>
+        <div class="hero-stat-lbl">Sets Completed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="statAvgScore">—</div>
+        <div class="hero-stat-lbl">Avg. Score</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="statRemaining">—</div>
+        <div class="hero-stat-lbl">Sets Remaining</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="statStreak">—</div>
+        <div class="hero-stat-lbl">Total Questions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error banner -->
+  <div class="error-banner" id="errorBanner"></div>
+
+  <!-- Filter tabs -->
+  <div class="filter-strip">
+    <button class="filter-tab active" data-filter="all"             onclick="setFilter('all',this)">All Sets</button>
+    <button class="filter-tab"        data-filter="Reading &amp; Writing" onclick="setFilter('Reading & Writing',this)">Reading &amp; Writing</button>
+    <button class="filter-tab"        data-filter="Math"            onclick="setFilter('Math',this)">Math</button>
+    <button class="filter-tab"        data-filter="Mixed"           onclick="setFilter('Mixed',this)">Mixed &amp; Full Sessions</button>
+    <button class="filter-tab"        data-filter="completed"       onclick="setFilter('completed',this)">Completed</button>
+    <button class="filter-tab"        data-filter="not-started"     onclick="setFilter('not-started',this)">Not Started</button>
+  </div>
+
+  <!-- Library grid -->
+  <div class="library-body">
+    <div id="libraryGrid"></div>
+    <div class="empty-state" id="emptyState">No practice sets match this filter.</div>
+  </div>
+
+</section>
+
+<footer class="site-footer">
+  &copy; Harland Education &mdash; Confidential Student Material
+</footer>
+
+<!-- ===== MAIN SCRIPT (ES5 ONLY) ===== -->
+<script>
+
+  /* ==========================================================
+     STATE
+     ========================================================== */
+  var currentStudent   = '';     /* student name */
+  var completionMap    = {};     /* diagnostic_type -> { correct, total, date } (most recent) */
+  var activeFilter     = 'all';
+  var dataLoaded       = false;
+
+  /* ==========================================================
+     UTILITIES
+     ========================================================== */
+  function escHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function initials(name) {
+    var parts = name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  function showScreen(id) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  function setLoading(on) {
+    document.getElementById('loadingOverlay').className = on ? 'loading-overlay visible' : 'loading-overlay';
+  }
+
+  function showError(msg) {
+    var el = document.getElementById('errorBanner');
+    el.textContent = msg;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  /* ==========================================================
+     INIT
+     ========================================================== */
+  (function init() {
+    document.getElementById('loginEyebrowEl').textContent = CONFIG.loginEyebrow;
+    document.getElementById('loginTitleEl').textContent   = CONFIG.loginTitle;
+    document.getElementById('loginDescEl').textContent    = CONFIG.loginDesc;
+    document.getElementById('heroTitle').textContent      = CONFIG.heroTitle;
+
+    /* Check URL param for pre-filled name (?name=...) */
+    var urlName = getUrlParam('name');
+    if (urlName) {
+      document.getElementById('loginName').value = decodeURIComponent(urlName);
+    }
+
+    document.getElementById('btnLogin').onclick = handleLogin;
+    document.getElementById('loginName').onkeydown = function(e) {
+      if (e.key === 'Enter' || e.keyCode === 13) handleLogin();
+    };
+  })();
+
+  function getUrlParam(key) {
+    var search = window.location.search;
+    if (!search) return null;
+    var pairs = search.substring(1).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      var kv = pairs[i].split('=');
+      if (kv[0] === key) return kv[1] || '';
+    }
+    return null;
+  }
+
+  /* ==========================================================
+     LOGIN
+     ========================================================== */
+  function handleLogin() {
+    var name = document.getElementById('loginName').value.trim();
+    if (!name) {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginName').focus();
+      return;
+    }
+    document.getElementById('loginError').style.display = 'none';
+    currentStudent = name;
+
+    /* Update header */
+    document.getElementById('headerStudentName').textContent = name;
+    document.getElementById('studentAvatarEl').textContent   = initials(name);
+    document.getElementById('headerStudentEl').style.display = 'flex';
+
+    showScreen('screenLibrary');
+    loadCompletionData();
+  }
+
+  function changeStudent() {
+    currentStudent = '';
+    completionMap  = {};
+    dataLoaded     = false;
+    document.getElementById('headerStudentEl').style.display = 'none';
+    document.getElementById('loginName').value = '';
+    showScreen('screenLogin');
+  }
+
+  /* ==========================================================
+     SUPABASE — LOAD COMPLETION DATA
+     Reads all diagnostic submissions for this student and
+     builds completionMap keyed by diagnostic_type.
+     ========================================================== */
+  function loadCompletionData() {
+    setLoading(true);
+    showError('');
+
+    /* Render skeleton while loading */
+    renderSkeletons();
+
+    var url = SB_URL + '/rest/v1/diagnostics'
+            + '?select=diagnostic_type,score_correct,score_total,created_at'
+            + '&student_name=ilike.' + encodeURIComponent(currentStudent)
+            + '&order=created_at.desc';
+
+    var headers = {
+      'apikey':        SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY
+    };
+
+    fetch(url, { headers: headers })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Could not load your practice history. Status: ' + res.status);
+      return res.json();
+    })
+    .then(function(rows) {
+      /* Build completionMap — keep most recent result per diagnostic_type */
+      completionMap = {};
+      for (var i = 0; i < rows.length; i++) {
+        var r   = rows[i];
+        var key = r.diagnostic_type;
+        if (!completionMap[key]) {
+          completionMap[key] = {
+            correct: r.score_correct || 0,
+            total:   r.score_total   || 0,
+            date:    r.created_at
+          };
+        }
+      }
+      dataLoaded = true;
+      setLoading(false);
+      updateHeroStats();
+      renderLibrary(activeFilter);
+    })
+    .catch(function(err) {
+      setLoading(false);
+      dataLoaded = true; /* still render library, just without history */
+      showError('Could not load your practice history — ' + err.message + '. Your results will still be saved when you complete a session.');
+      updateHeroStats();
+      renderLibrary(activeFilter);
+    });
+  }
+
+  /* ==========================================================
+     HERO STATS
+     ========================================================== */
+  function updateHeroStats() {
+    var completed     = 0;
+    var totalCorrect  = 0;
+    var totalScored   = 0;
+    var totalQDone    = 0;
+
+    for (var i = 0; i < CATALOG.length; i++) {
+      var entry = CATALOG[i];
+      var rec   = completionMap[entry.id];
+      if (rec) {
+        completed++;
+        totalCorrect += rec.correct;
+        totalScored  += rec.total;
+        totalQDone   += entry.questions;
+      }
+    }
+
+    var avgPct    = totalScored > 0 ? Math.round((totalCorrect / totalScored) * 100) : null;
+    var remaining = CATALOG.length - completed;
+
+    document.getElementById('statCompleted').textContent = completed;
+    document.getElementById('statAvgScore').textContent  = avgPct !== null ? avgPct + '%' : '—';
+    document.getElementById('statRemaining').textContent = remaining;
+    document.getElementById('statStreak').textContent    = totalQDone > 0 ? totalQDone : '—';
+
+    /* Personalise the greeting based on time of day */
+    var hour = new Date().getHours();
+    var tod  = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('heroGreeting').textContent = tod + ', ' + currentStudent.split(' ')[0];
+  }
+
+  /* ==========================================================
+     FILTER
+     ========================================================== */
+  function setFilter(filter, btnEl) {
+    activeFilter = filter;
+    var tabs = document.querySelectorAll('.filter-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    if (btnEl) btnEl.classList.add('active');
+    renderLibrary(filter);
+  }
+
+  /* ==========================================================
+     LIBRARY RENDER
+     ========================================================== */
+  function renderLibrary(filter) {
+    var categories  = ['Reading & Writing', 'Math', 'Mixed'];
+    var gridEl      = document.getElementById('libraryGrid');
+    var emptyEl     = document.getElementById('emptyState');
+    var html        = '';
+    var anyVisible  = false;
+
+    for (var c = 0; c < categories.length; c++) {
+      var cat       = categories[c];
+      var catItems  = getFilteredItems(cat, filter);
+      if (catItems.length === 0) continue;
+      anyVisible = true;
+
+      html += '<div class="category-section">';
+      html += '<div class="category-heading">'
+            + '<div class="category-heading-text">' + escHtml(cat) + '</div>'
+            + '<div class="category-heading-line"></div>'
+            + '</div>';
+      html += '<div class="practice-grid">';
+
+      for (var i = 0; i < catItems.length; i++) {
+        html += buildCard(catItems[i]);
+      }
+
+      html += '</div></div>';
+    }
+
+    gridEl.innerHTML = html;
+    emptyEl.style.display = anyVisible ? 'none' : 'block';
+
+    /* Animate score bars in after render */
+    setTimeout(function() {
+      var fills = document.querySelectorAll('.score-bar-fill[data-pct]');
+      for (var f = 0; f < fills.length; f++) {
+        fills[f].style.width = fills[f].getAttribute('data-pct') + '%';
+      }
+    }, 80);
+  }
+
+  function getFilteredItems(category, filter) {
+    var result = [];
+    for (var i = 0; i < CATALOG.length; i++) {
+      var entry     = CATALOG[i];
+      var isComplete = !!completionMap[entry.id];
+      if (entry.category !== category) continue;
+      if (filter === 'completed'   && !isComplete)  continue;
+      if (filter === 'not-started' && isComplete)   continue;
+      if (filter !== 'all' && filter !== 'completed' && filter !== 'not-started' && entry.category !== filter) continue;
+      result.push(entry);
+    }
+    return result;
+  }
+
+  function buildCard(entry) {
+    var rec        = completionMap[entry.id];
+    var isComplete = !!rec;
+    var sessionUrl = entry.file + '?name=' + encodeURIComponent(currentStudent);
+
+    /* Ribbon */
+    var ribbonCls  = isComplete ? 'completed'   : 'not-started';
+    var ribbonText = isComplete ? '&#10003; Done' : 'Not Started';
+
+    /* Category badge */
+    var catBadgeCls = entry.category === 'Math' ? 'badge-math'
+                    : entry.category === 'Mixed' ? 'badge-mixed'
+                    : 'badge-rw';
+    var catBadgeTxt = entry.category;
+
+    /* Difficulty badge */
+    var diffBadgeCls = entry.difficulty === 'Foundation' ? 'badge-foundation'
+                     : entry.difficulty === 'Hard'       ? 'badge-hard'
+                     : 'badge-medium';
+
+    var html = '<a class="practice-card' + (isComplete ? ' completed' : '') + '" href="' + escHtml(sessionUrl) + '">';
+
+    html += '<div class="card-ribbon ' + ribbonCls + '">' + ribbonText + '</div>';
+    html += '<div class="card-body">';
+    html += '<div class="card-badges">'
+          + '<span class="badge ' + catBadgeCls + '">' + escHtml(catBadgeTxt) + '</span>'
+          + '<span class="badge ' + diffBadgeCls + '">' + escHtml(entry.difficulty) + '</span>'
+          + '</div>';
+    html += '<div class="card-title">' + escHtml(entry.title) + '</div>';
+    html += '<div class="card-desc">' + escHtml(entry.description) + '</div>';
+    html += '<div class="card-meta">'
+          + '<span class="card-meta-item"><span class="card-meta-icon">&#9679;</span> ' + entry.questions + ' questions</span>'
+          + '<span class="card-meta-item"><span class="card-meta-icon">&#9679;</span> ~' + entry.minutes + ' min</span>'
+          + '</div>';
+    html += '</div>'; /* card-body */
+
+    /* Score bar for completed sets */
+    if (isComplete && rec.total > 0) {
+      var pct    = Math.round((rec.correct / rec.total) * 100);
+      var barCls = pct >= 80 ? 'high' : pct >= 50 ? 'mid' : 'low';
+      html += '<div class="card-score-bar">'
+            + '<div class="score-bar-track"><div class="score-bar-fill ' + barCls + '" style="width:0%" data-pct="' + pct + '"></div></div>'
+            + '<div class="score-bar-fraction">' + rec.correct + '/' + rec.total + '</div>'
+            + '<div class="score-bar-label">' + pct + '%</div>'
+            + '</div>';
+    } else if (isComplete) {
+      html += '<div class="card-score-bar" style="justify-content:center;">'
+            + '<div style="font-size:12px;color:var(--success);font-weight:600;">&#10003; Completed</div>'
+            + '</div>';
+    }
+
+    html += '</a>'; /* close card */
+    return html;
+  }
+
+  /* ==========================================================
+     SKELETON LOADER
+     Shows placeholder cards while Supabase data loads.
+     ========================================================== */
+  function renderSkeletons() {
+    var html = '<div class="practice-grid">';
+    for (var i = 0; i < 6; i++) {
+      html += '<div class="skeleton-card">'
+            + '<div class="skeleton-body">'
+            + '<div class="skeleton-line" style="width:60%;height:12px;margin-bottom:14px;"></div>'
+            + '<div class="skeleton-line" style="width:90%;height:16px;margin-bottom:8px;"></div>'
+            + '<div class="skeleton-line" style="width:75%;height:16px;margin-bottom:18px;"></div>'
+            + '<div class="skeleton-line" style="width:50%;height:10px;"></div>'
+            + '</div></div>';
+    }
+    html += '</div>';
+    document.getElementById('libraryGrid').innerHTML = html;
+  }
+
+</script>
+</body>
+</html>
