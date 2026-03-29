@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harland Education — Tutor Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #1B2A4A;
+      --navy-deep:  #131F38;
+      --navy-mid:   #243660;
+      --gold:       #C9A84C;
+      --gold-light: #EDD98A;
+      --gold-pale:  #FAF5E8;
+      --cream:      #F7F5F0;
+      --white:      #FFFFFF;
+      --grey:       #6B7280;
+      --light-grey: #E5E3DF;
+      --mid-grey:   #D1CEC9;
+      --error:      #C0392B;
+      --error-bg:   #FEF2F2;
+      --success:    #27AE60;
+      --success-bg: #ECFDF5;
+      --warning:    #D97706;
+      --font-serif: 'Libre Baskerville', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--cream);
+      color: var(--navy);
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      background: var(--navy);
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      min-height: 64px;
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .header-brand { display: flex; align-items: center; gap: 14px; }
+    .logo-mark {
+      width: 36px; height: 36px; background: var(--gold);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif); font-weight: 700; font-size: 17px; color: var(--navy);
+    }
+    .brand-name  { font-family: var(--font-serif); font-size: 17px; color: var(--white); }
+    .brand-sub   { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .header-badge {
+      background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold); font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
+    }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .btn-logout {
+      background: none; border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.5); font-family: var(--font-sans);
+      font-size: 12px; padding: 6px 12px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+
+    /* ===== SCREENS ===== */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ===== LOGIN ===== */
+    .login-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center; padding: 40px 24px;
+    }
+    .login-card {
+      background: var(--white); border: 1px solid var(--light-grey);
+      border-radius: 16px; padding: 48px 40px; max-width: 420px; width: 100%;
+      box-shadow: 0 4px 24px rgba(27,42,74,0.08);
+    }
+    .login-eyebrow {
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 14px;
+    }
+    .login-title { font-family: var(--font-serif); font-size: 26px; color: var(--navy); margin-bottom: 8px; }
+    .login-desc  { font-size: 14px; color: var(--grey); line-height: 1.6; margin-bottom: 32px; }
+    .field-label {
+      display: block; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy); margin-bottom: 8px;
+    }
+    .field-input {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--light-grey);
+      border-radius: 8px; font-family: var(--font-sans); font-size: 16px;
+      color: var(--navy); outline: none; transition: border-color 0.2s;
+    }
+    .field-input:focus { border-color: var(--gold); }
+    .field-error { font-size: 13px; color: var(--error); margin-top: 6px; display: none; }
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--navy); color: var(--white); font-family: var(--font-sans);
+      font-size: 15px; font-weight: 600; padding: 14px 28px; border: none;
+      border-radius: 8px; cursor: pointer; width: 100%; margin-top: 20px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--navy-mid); }
+
+    /* ===== DASHBOARD ===== */
+    .dash-hero {
+      background: var(--navy); padding: 32px 40px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .dash-hero-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+    .dash-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .dash-title { font-family: var(--font-serif); font-size: 26px; color: var(--white); }
+    .dash-stats {
+      display: flex; gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.08); margin: 0 -40px;
+    }
+    .dash-stat {
+      flex: 1; padding: 18px 28px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .dash-stat:last-child { border-right: none; }
+    .dash-stat-val {
+      font-family: var(--font-serif); font-size: 26px; font-weight: 700;
+      color: var(--white); line-height: 1;
+    }
+    .dash-stat-val.gold { color: var(--gold); }
+    .dash-stat-lbl { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 5px; }
+
+    /* ===== FILTER ROW ===== */
+    .filter-row {
+      background: var(--white); border-bottom: 1px solid var(--light-grey);
+      padding: 14px 40px; display: flex; align-items: center; gap: 16px;
+    }
+    .search-input {
+      flex: 1; max-width: 300px; padding: 8px 14px;
+      border: 1.5px solid var(--light-grey); border-radius: 6px;
+      font-family: var(--font-sans); font-size: 14px; color: var(--navy);
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--gold); }
+    .filter-label { font-size: 13px; color: var(--grey); }
+
+    /* ===== MAIN BODY ===== */
+    .dash-body { padding: 32px 40px 64px; max-width: 1100px; }
+
+    /* ===== LOADING / ERROR ===== */
+    .load-state {
+      text-align: center; padding: 64px 24px; color: var(--grey);
+    }
+    .spinner {
+      width: 36px; height: 36px; margin: 0 auto 16px;
+      border: 3px solid rgba(201,168,76,0.2); border-top-color: var(--gold);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-box {
+      background: var(--error-bg); border: 1px solid #FECACA;
+      border-radius: 8px; padding: 16px 20px; font-size: 14px;
+      color: var(--error); margin-bottom: 24px; display: none;
+    }
+
+    /* ===== STUDENT TABLE ===== */
+    .section-heading {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--grey); margin-bottom: 16px;
+    }
+    .student-table {
+      width: 100%; border-collapse: collapse;
+      background: var(--white); border-radius: 12px;
+      overflow: hidden; border: 1px solid var(--light-grey);
+      box-shadow: 0 1px 8px rgba(27,42,74,0.05);
+    }
+    .student-table thead th {
+      background: var(--navy); color: rgba(255,255,255,0.6);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 14px 20px; text-align: left;
+    }
+    .student-table thead th:first-child { border-radius: 0; }
+    .student-table tbody tr {
+      border-bottom: 1px solid var(--light-grey);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .student-table tbody tr:last-child { border-bottom: none; }
+    .student-table tbody tr:hover { background: var(--gold-pale); }
+    .student-table tbody td { padding: 16px 20px; font-size: 14px; vertical-align: middle; }
+    .student-name-cell { font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 12px; }
+    .student-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(27,42,74,0.08); display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--navy); flex-shrink: 0;
+    }
+    .score-pill {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+    }
+    .score-pill.high   { background: var(--success-bg); color: var(--success); }
+    .score-pill.mid    { background: #FFFBEB; color: var(--warning); }
+    .score-pill.low    { background: var(--error-bg); color: var(--error); }
+    .score-pill.none   { background: var(--cream); color: var(--grey); }
+    .chevron { color: var(--mid-grey); font-size: 16px; }
+    .date-cell { color: var(--grey); font-size: 13px; }
+
+    /* ===== STUDENT DETAIL PANEL ===== */
+    .detail-panel {
+      display: none; margin-top: 32px;
+    }
+    .detail-panel.open { display: block; }
+    .detail-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+    }
+    .btn-back {
+      background: none; border: 1.5px solid var(--light-grey);
+      color: var(--navy); font-family: var(--font-sans); font-size: 13px;
+      font-weight: 600; padding: 8px 16px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-back:hover { border-color: var(--navy); background: var(--white); }
+    .detail-student-name { font-family: var(--font-serif); font-size: 22px; color: var(--navy); }
+    .detail-student-sub  { font-size: 13px; color: var(--grey); margin-top: 2px; }
+
+    /* Session cards */
+    .sessions-grid { display: flex; flex-direction: column; gap: 12px; }
+    .session-card {
+      background: var(--white); border: 1.5px solid var(--light-grey);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 6px rgba(27,42,74,0.04);
+    }
+    .session-card-header {
+      padding: 18px 22px; display: flex; align-items: center;
+      gap: 16px; cursor: pointer; transition: background 0.15s;
+    }
+    .session-card-header:hover { background: var(--gold-pale); }
+    .session-score-ring {
+      width: 52px; height: 52px; flex-shrink: 0; position: relative;
+    }
+    .session-score-ring svg { transform: rotate(-90deg); }
+    .session-score-ring .ring-bg   { fill: none; stroke: var(--light-grey); stroke-width: 4; }
+    .session-score-ring .ring-fill { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+    .ring-fill.high { stroke: var(--success); }
+    .ring-fill.mid  { stroke: var(--gold); }
+    .ring-fill.low  { stroke: var(--error); }
+    .ring-label {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; font-size: 11px; font-weight: 700; color: var(--navy);
+    }
+    .session-info { flex: 1; }
+    .session-title { font-weight: 600; font-size: 15px; color: var(--navy); margin-bottom: 3px; }
+    .session-meta  { font-size: 12px; color: var(--grey); display: flex; gap: 14px; flex-wrap: wrap; }
+    .session-expand-btn {
+      background: none; border: none; color: var(--mid-grey);
+      font-size: 18px; cursor: pointer; padding: 4px; line-height: 1;
+      transition: color 0.2s; flex-shrink: 0;
+    }
+    .session-expand-btn:hover { color: var(--navy); }
+
+    /* Question breakdown */
+    .session-breakdown {
+      border-top: 1px solid var(--light-grey);
+      display: none; padding: 0 22px 18px;
+    }
+    .session-breakdown.open { display: block; }
+    .breakdown-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .breakdown-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; border-radius: 8px;
+      background: var(--cream);
+    }
+    .breakdown-icon {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; margin-top: 1px;
+    }
+    .breakdown-icon.correct   { background: var(--success-bg); color: var(--success); }
+    .breakdown-icon.incorrect { background: var(--error-bg); color: var(--error); }
+    .breakdown-icon.skipped   { background: var(--cream); color: var(--grey); border: 1px solid var(--light-grey); }
+    .breakdown-content { flex: 1; min-width: 0; }
+    .breakdown-qtext { font-size: 13px; color: var(--navy); line-height: 1.4; margin-bottom: 4px; }
+    .breakdown-answers {
+      display: flex; gap: 14px; font-size: 12px; color: var(--grey); flex-wrap: wrap;
+    }
+    .ans-correct { color: var(--success); font-weight: 600; }
+    .ans-wrong   { color: var(--error); font-weight: 600; }
+    .breakdown-time { font-size: 11px; color: var(--mid-grey); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+
+    /* Skill summary within session */
+    .skill-summary {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; margin-bottom: 4px;
+    }
+    .skill-chip {
+      background: var(--white); border: 1px solid var(--light-grey);
+      border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--navy);
+    }
+    .skill-chip strong { color: var(--navy); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 48px 24px; color: var(--grey); font-size: 14px;
+    }
+
+    /* ===== REFRESH BTN ===== */
+    .btn-refresh {
+      background: none; border: 1.5px solid var(--light-grey);
+      color: var(--grey); font-family: var(--font-sans); font-size: 13px;
+      padding: 8px 14px; border-radius: 6px; cursor: pointer;
+      transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-refresh:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: var(--navy); padding: 20px 40px;
+      text-align: center; font-size: 12px; color: rgba(255,255,255,0.25);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .site-header  { padding: 0 20px; }
+      .dash-hero    { padding: 24px 20px 0; }
+      .dash-stats   { margin: 0 -20px; overflow-x: auto; }
+      .dash-stat    { min-width: 110px; padding: 14px 18px; }
+      .filter-row   { padding: 12px 20px; }
+      .dash-body    { padding: 20px 20px 48px; }
+      .student-table thead { display: none; }
+      .student-table tbody td { display: block; padding: 8px 16px; }
+      .student-table tbody td:first-child { padding-top: 16px; }
+      .student-table tbody td:last-child  { padding-bottom: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     CONFIGURATION
+     ============================================================ -->
+<script>
+  var SB_URL   = 'https://takuuqvpyqvomcfmcjoz.supabase.co';
+  var SB_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRha3V1cXZweXF2b21jZm1jam96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODM2MDYsImV4cCI6MjA5MDI1OTYwNn0.X_9VXsZBO5pKlNtvP5-AL6d5LlSfjNxDSb8NZB9vO7M';
+
+  /* ---- CHANGE THIS PASSWORD ---- */
+  var TUTOR_PASSWORD = 'harland2025';
+  /* ------------------------------ */
+</script>
+<!-- END CONFIGURATION -->
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-brand">
+    <div class="logo-mark">H</div>
+    <div>
+      <div class="brand-name">Harland Education</div>
+      <div class="brand-sub">SAT Preparation</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="header-badge" id="headerBadge" style="display:none;">Tutor Dashboard</span>
+    <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sign Out</button>
+  </div>
+</header>
+
+<!-- ===== SCREEN 1: LOGIN ===== -->
+<section class="screen active" id="screenLogin">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-eyebrow">Tutor Access</div>
+      <h1 class="login-title">Dashboard Login</h1>
+      <p class="login-desc">Enter the tutor password to view student results and session data.</p>
+      <label class="field-label" for="passwordInput">Password</label>
+      <input class="field-input" type="password" id="passwordInput" placeholder="Enter password">
+      <div class="field-error" id="passwordError">Incorrect password. Please try again.</div>
+      <button class="btn-primary" id="btnLogin">Access Dashboard</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCREEN 2: DASHBOARD ===== -->
+<section class="screen" id="screenDashboard">
+
+  <!-- Hero -->
+  <div class="dash-hero">
+    <div class="dash-hero-top">
+      <div>
+        <div class="dash-eyebrow">Overview</div>
+        <div class="dash-title">Student Results</div>
+      </div>
+    </div>
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-val gold" id="statStudents">—</div>
+        <div class="dash-stat-lbl">Students</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val" id="statSessions">—</div>
+        <div class="dash-stat-lbl">Sessions Completed</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val" id="statAvg">—</div>
+        <div class="dash-stat-lbl">Avg. Score</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val" id="statQuestions">—</div>
+        <div class="dash-stat-lbl">Questions Answered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter row -->
+  <div class="filter-row">
+    <input class="search-input" type="text" id="searchInput" placeholder="Search students..." oninput="filterStudents()">
+    <span class="filter-label" id="filterCount"></span>
+    <button class="btn-refresh" onclick="loadData()">&#8635; Refresh</button>
+  </div>
+
+  <!-- Body -->
+  <div class="dash-body">
+    <div class="error-box" id="errorBox"></div>
+
+    <!-- Student list -->
+    <div id="studentListWrap">
+      <div class="load-state" id="loadState">
+        <div class="spinner"></div>
+        <div>Loading student data...</div>
+      </div>
+    </div>
+
+    <!-- Student detail panel -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-header">
+        <button class="btn-back" onclick="closeDetail()">&#8592; All Students</button>
+        <div>
+          <div class="detail-student-name" id="detailName"></div>
+          <div class="detail-student-sub"  id="detailSub"></div>
+        </div>
+      </div>
+      <div class="sessions-grid" id="sessionsGrid"></div>
+    </div>
+  </div>
+
+</section>
+
+<footer class="site-footer">&copy; Harland Education &mdash; Tutor Use Only</footer>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+
+  /* ==========================================================
+     STATE
+     ========================================================== */
+  var allRows       = [];   /* raw diagnostics rows */
+  var studentMap    = {};   /* name -> [rows] */
+  var currentStudent = null;
+
+  /* ==========================================================
+     LOGIN
+     ========================================================== */
+  document.getElementById('btnLogin').onclick = handleLogin;
+  document.getElementById('passwordInput').onkeydown = function(e) {
+    if (e.key === 'Enter' || e.keyCode === 13) handleLogin();
+  };
+
+  function handleLogin() {
+    var pw = document.getElementById('passwordInput').value;
+    if (pw !== TUTOR_PASSWORD) {
+      document.getElementById('passwordError').style.display = 'block';
+      document.getElementById('passwordInput').focus();
+      return;
+    }
+    document.getElementById('passwordError').style.display = 'none';
+    showScreen('screenDashboard');
+    document.getElementById('headerBadge').style.display = 'inline-block';
+    document.getElementById('btnLogout').style.display = 'inline-block';
+    loadData();
+  }
+
+  function logout() {
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('headerBadge').style.display = 'none';
+    document.getElementById('btnLogout').style.display = 'none';
+    allRows = []; studentMap = {}; currentStudent = null;
+    showScreen('screenLogin');
+  }
+
+  /* ==========================================================
+     DATA LOADING
+     ========================================================== */
+  function loadData() {
+    document.getElementById('errorBox').style.display = 'none';
+    document.getElementById('detailPanel').classList.remove('open');
+    document.getElementById('studentListWrap').innerHTML =
+      '<div class="load-state"><div class="spinner"></div><div>Loading student data...</div></div>';
+
+    var url = SB_URL + '/rest/v1/diagnostics'
+            + '?select=id,student_name,diagnostic_type,diagnostic_label,score_correct,score_total,timing_data,mcq_scores,raw_responses,session_duration,created_at'
+            + '&order=created_at.desc'
+            + '&limit=500';
+
+    fetch(url, {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Could not load data (status ' + res.status + '). Run the RLS fix SQL — see setup instructions.');
+      return res.json();
+    })
+    .then(function(rows) {
+      allRows = rows || [];
+      buildStudentMap();
+      renderStats();
+      renderStudentList('');
+    })
+    .catch(function(err) {
+      document.getElementById('studentListWrap').innerHTML = '';
+      var eb = document.getElementById('errorBox');
+      eb.style.display = 'block';
+      eb.innerHTML = '<strong>Could not load data:</strong> ' + escHtml(err.message)
+        + '<br><span style="font-size:13px;margin-top:6px;display:block;">If you see "status 400", run this SQL in Supabase → SQL Editor:<br>'
+        + '<code style="background:#fee2e2;padding:2px 6px;border-radius:3px;font-size:12px;">'
+        + 'CREATE POLICY "Tutor read" ON diagnostics FOR SELECT USING (true);'
+        + '</code></span>';
+    });
+  }
+
+  function buildStudentMap() {
+    studentMap = {};
+    for (var i = 0; i < allRows.length; i++) {
+      var r = allRows[i];
+      var name = (r.student_name || 'Unknown').trim();
+      if (!studentMap[name]) studentMap[name] = [];
+      studentMap[name].push(r);
+    }
+  }
+
+  /* ==========================================================
+     STATS
+     ========================================================== */
+  function renderStats() {
+    var students  = Object.keys(studentMap).length;
+    var sessions  = allRows.length;
+    var totalC    = 0; var totalT = 0; var totalQ = 0;
+    for (var i = 0; i < allRows.length; i++) {
+      totalC += allRows[i].score_correct || 0;
+      totalT += allRows[i].score_total   || 0;
+      totalQ += allRows[i].score_total   || 0;
+    }
+    var avg = totalT > 0 ? Math.round((totalC / totalT) * 100) + '%' : '—';
+    document.getElementById('statStudents').textContent  = students;
+    document.getElementById('statSessions').textContent  = sessions;
+    document.getElementById('statAvg').textContent       = avg;
+    document.getElementById('statQuestions').textContent = totalQ;
+  }
+
+  /* ==========================================================
+     STUDENT LIST
+     ========================================================== */
+  function filterStudents() {
+    var q = document.getElementById('searchInput').value.trim().toLowerCase();
+    renderStudentList(q);
+  }
+
+  function renderStudentList(query) {
+    var names = Object.keys(studentMap).sort();
+    var filtered = names.filter(function(n) {
+      return !query || n.toLowerCase().indexOf(query) !== -1;
+    });
+
+    document.getElementById('filterCount').textContent =
+      filtered.length + ' of ' + names.length + ' students';
+
+    if (filtered.length === 0) {
+      document.getElementById('studentListWrap').innerHTML =
+        '<div class="empty-state">No students found.</div>';
+      return;
+    }
+
+    var html = '<div class="section-heading">All Students</div>';
+    html += '<table class="student-table"><thead><tr>'
+          + '<th>Student</th><th>Sessions</th><th>Avg Score</th>'
+          + '<th>Last Active</th><th></th>'
+          + '</tr></thead><tbody>';
+
+    for (var i = 0; i < filtered.length; i++) {
+      var name = filtered[i];
+      var rows = studentMap[name];
+      var totalC = 0; var totalT = 0;
+      var latest = rows[0].created_at;
+      for (var j = 0; j < rows.length; j++) {
+        totalC += rows[j].score_correct || 0;
+        totalT += rows[j].score_total   || 0;
+      }
+      var pct     = totalT > 0 ? Math.round((totalC / totalT) * 100) : null;
+      var pillCls = pct === null ? 'none' : pct >= 80 ? 'high' : pct >= 50 ? 'mid' : 'low';
+      var pillTxt = pct === null ? 'No score' : pct + '%';
+      var dateStr = formatDate(latest);
+      var avi     = initials(name);
+
+      html += '<tr onclick="openStudent(\'' + escAttr(name) + '\')">'
+            + '<td><div class="student-name-cell"><div class="student-avatar">' + escHtml(avi) + '</div>' + escHtml(name) + '</div></td>'
+            + '<td>' + rows.length + ' session' + (rows.length !== 1 ? 's' : '') + '</td>'
+            + '<td><span class="score-pill ' + pillCls + '">' + pillTxt + '</span></td>'
+            + '<td class="date-cell">' + dateStr + '</td>'
+            + '<td class="chevron">›</td>'
+            + '</tr>';
+    }
+
+    html += '</tbody></table>';
+    document.getElementById('studentListWrap').innerHTML = html;
+  }
+
+  /* ==========================================================
+     STUDENT DETAIL
+     ========================================================== */
+  function openStudent(name) {
+    currentStudent = name;
+    var rows = studentMap[name] || [];
+
+    document.getElementById('detailName').textContent = name;
+    var totalC = 0; var totalT = 0;
+    for (var i = 0; i < rows.length; i++) {
+      totalC += rows[i].score_correct || 0;
+      totalT += rows[i].score_total   || 0;
+    }
+    var avg = totalT > 0 ? Math.round((totalC / totalT) * 100) + '%' : '—';
+    document.getElementById('detailSub').textContent =
+      rows.length + ' session' + (rows.length !== 1 ? 's' : '') + ' · Avg score: ' + avg;
+
+    var html = '';
+    for (var j = 0; j < rows.length; j++) {
+      html += buildSessionCard(rows[j], j);
+    }
+    document.getElementById('sessionsGrid').innerHTML = html || '<div class="empty-state">No sessions yet.</div>';
+
+    /* Animate score rings after render */
+    setTimeout(animateRings, 80);
+
+    /* Hide list, show detail */
+    document.getElementById('studentListWrap').style.display = 'none';
+    document.querySelector('.filter-row').style.display = 'none';
+    document.getElementById('detailPanel').classList.add('open');
+    window.scrollTo(0, 0);
+  }
+
+  function closeDetail() {
+    currentStudent = null;
+    document.getElementById('detailPanel').classList.remove('open');
+    document.getElementById('studentListWrap').style.display = '';
+    document.querySelector('.filter-row').style.display = '';
+    window.scrollTo(0, 0);
+  }
+
+  /* ==========================================================
+     SESSION CARD
+     ========================================================== */
+  function buildSessionCard(row, idx) {
+    var correct  = row.score_correct || 0;
+    var total    = row.score_total   || 0;
+    var pct      = total > 0 ? Math.round((correct / total) * 100) : 0;
+    var ringCls  = pct >= 80 ? 'high' : pct < 50 ? 'low' : 'mid';
+    var circ     = 2 * Math.PI * 20; /* r=20 */
+    var offset   = circ; /* start fully empty, animate in */
+    var label    = row.diagnostic_label || row.diagnostic_type || 'Practice Session';
+    var date     = formatDate(row.created_at);
+    var duration = row.session_duration ? formatDuration(row.session_duration) : '—';
+    var cardId   = 'scard_' + idx;
+    var breakId  = 'sbreak_' + idx;
+
+    var html = '<div class="session-card" id="' + cardId + '">';
+
+    /* Header */
+    html += '<div class="session-card-header" onclick="toggleSession(\'' + breakId + '\', this)">';
+    html += '<div class="session-score-ring">'
+          + '<svg width="52" height="52" viewBox="0 0 52 52">'
+          + '<circle class="ring-bg" cx="26" cy="26" r="20"/>'
+          + '<circle class="ring-fill ' + ringCls + '" cx="26" cy="26" r="20" '
+          + 'stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '" '
+          + 'data-pct="' + pct + '" data-circ="' + circ + '"/>'
+          + '</svg>'
+          + '<div class="ring-label">' + (total > 0 ? pct + '%' : '—') + '</div>'
+          + '</div>';
+
+    html += '<div class="session-info">'
+          + '<div class="session-title">' + escHtml(label) + '</div>'
+          + '<div class="session-meta">'
+          + '<span>&#9679; ' + correct + '/' + total + ' correct</span>'
+          + '<span>&#9679; ' + date + '</span>'
+          + '<span>&#9679; ' + duration + '</span>'
+          + '</div>'
+          + '</div>';
+
+    html += '<button class="session-expand-btn" title="View questions">&#9660;</button>';
+    html += '</div>'; /* session-card-header */
+
+    /* Breakdown */
+    html += '<div class="session-breakdown" id="' + breakId + '">';
+    html += buildBreakdown(row);
+    html += '</div>';
+
+    html += '</div>'; /* session-card */
+    return html;
+  }
+
+  function toggleSession(breakId, headerEl) {
+    var el = document.getElementById(breakId);
+    var btn = headerEl.querySelector('.session-expand-btn');
+    if (el.classList.contains('open')) {
+      el.classList.remove('open');
+      if (btn) btn.innerHTML = '&#9660;';
+    } else {
+      el.classList.add('open');
+      if (btn) btn.innerHTML = '&#9650;';
+    }
+  }
+
+  function buildBreakdown(row) {
+    var mcqScores = row.mcq_scores || {};
+    var timing    = row.timing_data || {};
+    var letters   = ['A','B','C','D'];
+
+    var qids = Object.keys(mcqScores);
+    if (qids.length === 0) {
+      return '<div style="padding:16px 0;font-size:13px;color:var(--grey);">No question detail available.</div>';
+    }
+
+    /* Skill summary */
+    var skillMap = {};
+    /* We don't have skill per question in diagnostics — group by correct/incorrect */
+    var correctCount   = 0;
+    var incorrectCount = 0;
+    var skippedCount   = 0;
+
+    var rowsHtml = '';
+    for (var i = 0; i < qids.length; i++) {
+      var qid  = qids[i];
+      var sc   = mcqScores[qid];
+      var secs = timing[qid] || 0;
+      var isCorrect = sc.correct;
+      var chosen    = sc.chosen;
+      var answer    = sc.answer;
+
+      var iconCls, iconSym;
+      if (typeof chosen === 'undefined' || chosen === null || chosen === '') {
+        iconCls = 'skipped'; iconSym = '—'; skippedCount++;
+      } else if (isCorrect) {
+        iconCls = 'correct'; iconSym = '&#10003;'; correctCount++;
+      } else {
+        iconCls = 'incorrect'; iconSym = '&#10005;'; incorrectCount++;
+      }
+
+      /* Format answer display */
+      var chosenDisp  = (typeof chosen === 'number') ? letters[chosen] : (chosen || '—');
+      var correctDisp = (typeof answer === 'number') ? letters[answer] : (answer || '—');
+      var chosenCls   = isCorrect ? 'ans-correct' : 'ans-wrong';
+
+      rowsHtml += '<div class="breakdown-row">'
+               + '<div class="breakdown-icon ' + iconCls + '">' + iconSym + '</div>'
+               + '<div class="breakdown-content">'
+               + '<div class="breakdown-qtext">' + escHtml(qid) + '</div>'
+               + '<div class="breakdown-answers">'
+               + '<span>Your answer: <span class="' + chosenCls + '">' + escHtml(String(chosenDisp)) + '</span></span>'
+               + '<span>Correct: <span class="ans-correct">' + escHtml(String(correctDisp)) + '</span></span>'
+               + '</div>'
+               + '</div>'
+               + '<div class="breakdown-time">' + secs + 's</div>'
+               + '</div>';
+    }
+
+    var summaryHtml = '<div class="skill-summary">'
+      + '<div class="skill-chip"><strong style="color:var(--success);">' + correctCount + '</strong> correct</div>'
+      + '<div class="skill-chip"><strong style="color:var(--error);">' + incorrectCount + '</strong> incorrect</div>'
+      + (skippedCount > 0 ? '<div class="skill-chip"><strong>' + skippedCount + '</strong> skipped</div>' : '')
+      + '</div>';
+
+    return summaryHtml + '<div class="breakdown-grid">' + rowsHtml + '</div>';
+  }
+
+  /* ==========================================================
+     RING ANIMATION
+     ========================================================== */
+  function animateRings() {
+    var fills = document.querySelectorAll('.ring-fill[data-pct]');
+    for (var i = 0; i < fills.length; i++) {
+      var el   = fills[i];
+      var pct  = parseFloat(el.getAttribute('data-pct'));
+      var circ = parseFloat(el.getAttribute('data-circ'));
+      el.style.strokeDashoffset = circ * (1 - pct / 100);
+    }
+  }
+
+  /* ==========================================================
+     UTILITIES
+     ========================================================== */
+  function escHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function escAttr(str) {
+    return String(str).replace(/'/g, "\\'");
+  }
+
+  function initials(name) {
+    var parts = (name || '').trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+    return (name || '??').substring(0, 2).toUpperCase();
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function formatDuration(secs) {
+    if (!secs) return '—';
+    var m = Math.floor(secs / 60);
+    var s = secs % 60;
+    return m > 0 ? m + 'm ' + s + 's' : s + 's';
+  }
+
+  function showScreen(id) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+</script>
+</body>
+</html>
